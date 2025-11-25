@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  ta-dashboard:
+    build: .
+    container_name: ta-dashboard
+    ports:
+      - "8501:8501"
+    environment:
+      - PRICE_DB_PATH=/app/data/price_data.db
+      - REF_DB_PATH=/app/data/analysis_results.db
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data:/app/data  # Persistent database storage
+      - ./logs:/app/logs  # Optional: logs directory
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - dashboard-network
+
+networks:
+  dashboard-network:
+    driver: bridge

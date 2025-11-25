@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Database files (IMPORTANT: don't commit DB files)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+data/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Streamlit secrets (IMPORTANT: don't commit secrets)
+.streamlit/secrets.toml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# CSV exports (unless needed)
+*.csv
+!example_import.csv
