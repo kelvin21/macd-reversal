@@ -63,8 +63,26 @@ except ImportError:
 
 # Check if database exists, if not create empty one
 if not os.path.exists(DB_PATH):
-    st.warning(f"Database not found: {DB_PATH}")
-    st.info("Creating empty database...")
+    st.warning(f"⚠️ Database not found: {DB_PATH}")
+    
+    # Show import options
+    st.info("""
+    **Options to populate database:**
+    
+    1. **Upload CSV via Admin Panel** (recommended for Streamlit Cloud)
+       - Expand "🔧 Admin: Manage Tickers" in sidebar
+       - Use "Bulk Import CSV" section
+       - Upload your AmiBroker export
+    
+    2. **TCBS Refresh** (if build_price_db.py included)
+       - Add tickers manually via Admin Panel
+       - Use "Force refresh ALL tickers" to fetch from TCBS
+    
+    3. **Local Database** (for local development)
+       - Copy price_data.db to data/ directory
+    """)
+    
+    st.info("Creating empty database structure...")
     try:
         os.makedirs(os.path.dirname(DB_PATH) or ".", exist_ok=True)
         conn = sqlite3.connect(DB_PATH)
@@ -77,15 +95,17 @@ if not os.path.exists(DB_PATH):
                 low REAL,
                 close REAL,
                 volume INTEGER,
-                source TEXT,
+                source TEXT DEFAULT 'manual',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (ticker, date, source)
             )
         """)
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_ticker ON price_data(ticker)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_date ON price_data(date)")
         conn.commit()
         conn.close()
-        st.success("Empty database created. Use admin panel to add tickers.")
+        st.success("✓ Empty database created. Add tickers using Admin Panel below.")
     except Exception as e:
         st.error(f"Failed to create database: {e}")
         st.stop()
